@@ -10,10 +10,11 @@ import SwiftUI
 @main
 struct WordleApp: App {
     let persistenceController = PersistenceController.shared
+    @StateObject var manager = UserManager()
 
     var body: some Scene {
         WindowGroup {
-            ContentView()
+            ContentView().environmentObject(UserManager())
                 .environment(\.managedObjectContext, persistenceController.container.viewContext)
         }
     }

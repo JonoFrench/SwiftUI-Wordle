@@ -10,43 +10,87 @@ import CoreData
 
 struct ContentView: View {
     @Environment(\.managedObjectContext) private var viewContext
+    @EnvironmentObject var manager: UserManager
+    @State private var showingSettings = false
+    @State private var showingHelp = false
+    @State private var showingStats = false
 
     @FetchRequest(
         sortDescriptors: [NSSortDescriptor(keyPath: \Item.timestamp, ascending: true)],
         animation: .default)
     private var items: FetchedResults<Item>
-
+    
+    let words = GameWords()
+        
     var body: some View {
         NavigationView {
-            List {
-                ForEach(items) { item in
-                    NavigationLink {
-                        Text("Item at \(item.timestamp!, formatter: itemFormatter)")
-                    } label: {
-                        Text(item.timestamp!, formatter: itemFormatter)
+            ZStack(alignment: .top) {
+                if manager.isNotWordView {
+                    noWord()
+                }
+                
+                VStack {
+                    Spacer()
+                    GameView()
+                    Spacer()
+                    HStack {
+                        Spacer()
+                        KeyboardView(showingStats: $showingStats)
+                        Spacer()
+                        
                     }
+                    Spacer()
                 }
-                .onDelete(perform: deleteItems)
-            }
-            .toolbar {
-                ToolbarItem(placement: .navigationBarTrailing) {
-                    EditButton()
-                }
-                ToolbarItem {
-                    Button(action: addItem) {
-                        Label("Add Item", systemImage: "plus")
+                .toolbar {
+                    ToolbarItem(placement: .navigationBarTrailing) {
+                        Button(action: {showingSettings = true}) {
+                            Label("Settings", systemImage: "gearshape.fill")
+                                .foregroundColor(.black)
+                        }.popover(isPresented: $showingSettings) {
+                            SettingsView(showingSettings: $showingSettings)
+                        }
+                    }                    
+                    ToolbarItem {
+                        Button(action: {showingHelp = true}) {
+                            Label("Help", systemImage: "questionmark.circle")
+                                .foregroundColor(.black)
+                        }.popover(isPresented: $showingHelp) {
+                            HelpView(showingHelp: $showingHelp)
+                         }
                     }
-                }
-            }
-            Text("Select an item")
+                    ToolbarItem {
+                        Button(action: {showingStats = true}) {
+                            Label("Statistics", systemImage: "rectangle.3.offgrid")
+                                .foregroundColor(.black)
+                        }.popover(isPresented: $showingStats) {
+                            StatsView(showingStats: $showingStats)
+                         }
+                    }
+                }.navigationTitle("SwiftUI Wordle")
+            }.onAppear(){
+            }.navigationBarTitle("Wordle", displayMode: .inline)
         }
     }
-
+    
+    struct noWord: View {
+        var body: some View {
+            VStack {
+                Label ("Not a word", image: "")
+                    .font(.caption)
+                    .fontWeight(.bold)
+                    .labelStyle(.titleOnly)
+                    .frame(width: 100, height: 30,alignment: .center)
+                    .foregroundColor(.white)
+                    .background(Color.black)
+            }.padding(.top, 20)
+        }
+    }
+    
     private func addItem() {
         withAnimation {
             let newItem = Item(context: viewContext)
             newItem.timestamp = Date()
-
+            
             do {
                 try viewContext.save()
             } catch {
@@ -57,11 +101,11 @@ struct ContentView: View {
             }
         }
     }
-
+    
     private func deleteItems(offsets: IndexSet) {
         withAnimation {
             offsets.map { items[$0] }.forEach(viewContext.delete)
-
+            
             do {
                 try viewContext.save()
             } catch {
