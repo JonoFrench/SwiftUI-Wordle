@@ -11,12 +11,28 @@ struct SettingsView: View {
     @Binding var showingSettings: Bool
 
     var body: some View {
+        ZStack{
+            closeButton
+            VStack {
+                Text("Settings")
+                Spacer()
+            }
+        }
+    }
+    var closeButton: some View {
         VStack {
-          Text("Settings")
-          Spacer()
-          Button("Cancel")
-          { self.showingSettings = false
-          }
+            HStack {
+                Spacer()
+                Button(action: {
+                    self.showingSettings = false
+                }) {
+                    Image(systemName: "xmark.circle")
+                        .padding(10)
+                        .foregroundColor(.black)
+                }
+            }
+            .padding(.top, 5)
+            Spacer()
         }
     }
 }

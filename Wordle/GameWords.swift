@@ -11,13 +11,14 @@ enum wordResults {
     case blank,no,included,yes
 }
 
-class GameWords {
+struct GameWords {
     
     var answers:[String] = []
     var allWords:[String] = []
     var todaysWord = ""
         
     init() {
+        print("init GameWords")
         answers = readAnswers()
         allWords = readWordList()
         todaysWord = getWord()
@@ -70,9 +71,9 @@ class GameWords {
     
     func getWord() -> String {
         let index = Int.random(in: 0..<answers.count)
-        todaysWord = answers[index]
-        todaysWord = "slate"
-        return todaysWord
+        //todaysWord = answers[index]
+        //todaysWord = "slate"
+        return answers[index]
     }
 
     func compareGuess(word: String) -> Bool {

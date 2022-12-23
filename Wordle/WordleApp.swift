@@ -6,16 +6,16 @@
 //
 
 import SwiftUI
+import CoreData
 
 @main
 struct WordleApp: App {
-    let persistenceController = PersistenceController.shared
-    @StateObject var manager = UserManager()
-
+    @StateObject private var manager = UserManager()
+    
+    init() {
+    }
     var body: some Scene {
         WindowGroup {
-            ContentView().environmentObject(UserManager())
-                .environment(\.managedObjectContext, persistenceController.container.viewContext)
-        }
+            ContentView().environmentObject(manager)        }
     }
 }
