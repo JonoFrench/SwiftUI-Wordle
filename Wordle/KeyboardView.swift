@@ -19,7 +19,7 @@ struct KeyboardView: View {
                 KeyboardLine(line: manager.line3)
                 BackButton()
             }
-        }
+        }.disabled(manager.inputDisabled)
     }
 }
 
@@ -36,19 +36,19 @@ struct KeyButton : View {
     @EnvironmentObject var manager: UserManager
     
     var body: some View {
-        Button(action: {
+        Button {
             manager.wordsArray[manager.currentLine][manager.currentPosition].key = keyItem.key.uppercased()
             if manager.currentPosition < 4 {
                 manager.currentPosition += 1
             }
             print(keyItem.key,keyItem.used)
-        }){
-            Text(keyItem.key)
+        } label: {
+                Text(keyItem.key)
                 .foregroundColor(keyItem.foregroundColor)
-                .font(.system(size: 10, weight: Font.Weight.bold))
                 .frame(minHeight: 30)
-                .ignoresSafeArea()
+                .padding(-2)
         }
+        .font(.system(size: 12, weight: Font.Weight.bold))
         .background(keyItem.backgroundColor)
         .buttonStyle(.bordered)
     }
@@ -74,6 +74,7 @@ struct BackButton : View {
                 .background(Color(UIColor.systemGray5))
                 .foregroundColor(.black)
                 .frame(maxWidth: 16, minHeight: 30)
+                .labelStyle(.iconOnly)
         }
         .buttonStyle(.bordered)
     }
@@ -111,6 +112,6 @@ struct KeyItem : Identifiable, Hashable {
 //    @State static var value = false
 //
 //    static var previews: some View {
-//        KeyboardView(showingStats: $value)
+//        KeyboardView()
 //    }
 //}

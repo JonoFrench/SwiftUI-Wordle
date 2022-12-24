@@ -45,20 +45,20 @@ class DataManager {
             context.perform {
                 do {
                     let result = try fetchRequest.execute()
-                    let newStats = result.first
-                    newStats?.lastUpdated = Date()
-                    if winner {
-                        if playerStats.currentStreak >= playerStats.maxStreak {
-                            newStats?.maxStreak = playerStats.maxStreak + 1
+                    if let newStats = result.first {
+                        newStats.lastUpdated = Date()
+                        if winner {
+                            if playerStats.currentStreak >= playerStats.maxStreak {
+                                newStats.maxStreak = playerStats.maxStreak + 1
+                            }
+                            newStats.currentStreak = playerStats.currentStreak + 1
+                        } else {
+                            newStats.currentStreak = 0
+                            newStats.lostGames = playerStats.lostGames + 1
+                            newStats.maxStreak = playerStats.maxStreak
                         }
-                        newStats?.currentStreak = playerStats.currentStreak + 1
-                    } else {
-                        newStats?.currentStreak = 0
-                        newStats?.lostGames = playerStats.lostGames + 1
-                        newStats?.maxStreak = playerStats.maxStreak
+                        self.userManager.playerStats = newStats
                     }
-                    self.userManager.playerStats = newStats
-                    
                 } catch {
                     print("Unable to Execute Fetch Request, \(error)")
                 }
@@ -76,7 +76,7 @@ class DataManager {
     }
     
     func seed() {
-        let words = GameWords()
+//        let words = GameWords()
         
         //Seed Stats
         let newStats = GameStats(context: context)
@@ -111,7 +111,6 @@ class DataManager {
         }
     }
     
-    
     func clearData (entity:String) {
         let fetchRequest: NSFetchRequest<NSFetchRequestResult> = NSFetchRequest(entityName: entity)
         let deleteRequest = NSBatchDeleteRequest(fetchRequest: fetchRequest)
@@ -130,16 +129,15 @@ class DataManager {
         context.perform {
             
             do {
-                // Execute Fetch Request
                 let result = try fetchRequest.execute()
-                //let stats = result.first
-                //print("Stats \(stats)")
+                if result.count == 0 {
+                    self.seed()
+                    self.fetchStats()
+                }
                 self.userManager.playerStats = result.first
-                
             } catch {
                 print("Unable to Execute Fetch Request, \(error)")
             }
-            
         }
     }
     
@@ -147,7 +145,6 @@ class DataManager {
     func fetchGames() {
         let fetchRequest: NSFetchRequest<Games> = Games.fetchRequest()
         context.perform {
-            
             do {
                 var gameStats = [0,0,0,0,0,0]
                 let result = try fetchRequest.execute()
@@ -160,7 +157,6 @@ class DataManager {
                             gameStats[i-1] = num
                         }
                     }
-                    //self.userManager.gameStats = [0,10,50,75,90,100]
                     print("Games \(count) Results \(counts) Stats \(gameStats)")
                 }
                 self.userManager.gameStats = gameStats
@@ -170,5 +166,11 @@ class DataManager {
                 print("Unable to Execute Fetch Request, \(error)")
             }
         }
+    }
+    
+    func update() {
+        self.addGame()
+        self.fetchStats()
+        self.fetchGames()
     }
 }

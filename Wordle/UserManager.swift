@@ -37,6 +37,10 @@ class UserManager: ObservableObject {
     @Published
     var currentFlip = 0
 
+    @Published
+    var inputDisabled = false
+
+    
     /// Stats stuff
     
     @Published
@@ -66,9 +70,9 @@ class UserManager: ObservableObject {
             }
         }
         let dataManager = DataManager(userManager: self)
-        //dataManager.clearData(entity: "GameStats")
-        //dataManager.clearData(entity: "Games")
-        //dataManager.seed()
+        dataManager.clearData(entity: "GameStats")
+        dataManager.clearData(entity: "Games")
+        dataManager.seed()
         dataManager.fetchStats()
         dataManager.fetchGames()
     }
@@ -89,6 +93,7 @@ class UserManager: ObservableObject {
         currentPosition = 0
         isNotWord = false
         winner = false
+        inputDisabled = false
         gameWords.todaysWord = gameWords.getWord()
     }
     
@@ -96,6 +101,7 @@ class UserManager: ObservableObject {
         if currentPosition != 4 {
             return
         }
+        self.inputDisabled = true
         
         let letters = wordsArray[currentLine]
         var word = ""
@@ -110,6 +116,7 @@ class UserManager: ObservableObject {
             isNotWordView = true
             DispatchQueue.main.asyncAfter(deadline: .now() + 1) {
                 self.isNotWordView = false
+                self.inputDisabled = false
             }
             return
         }
@@ -148,15 +155,14 @@ class UserManager: ObservableObject {
                     self.gameOver = true
                     self.winner = false
                     let dataManager = DataManager(userManager: self)
-                    dataManager.addGame()
-                    dataManager.fetchStats()
-                    dataManager.fetchGames()
+                    dataManager.update()
                     DispatchQueue.main.asyncAfter(deadline: .now() + 3) {
                         self.gameOver = false
                         self.showingStats = true
                     }
                 } else {
                     self.currentLine += 1
+                    self.inputDisabled = false
                 }
                 print("Failed")
             } else {
@@ -165,9 +171,7 @@ class UserManager: ObservableObject {
                 self.gameOver = true
                 self.winner = true
                 let dataManager = DataManager(userManager: self)
-                dataManager.addGame()
-                //dataManager.fetchStats()
-                dataManager.fetchGames()
+                dataManager.update()
                 DispatchQueue.main.asyncAfter(deadline: .now() + 3) {
                     self.gameOver = false
                     self.showingStats = true

@@ -34,8 +34,8 @@ struct LetterLine: View {
                 }
             }
             Spacer()
-        }.modifier(ShakeEffect(shakes: manager.isNotWord && manager.currentLine == gameRow ? 2 : 0))
-            .animation(.default.repeatCount(4, autoreverses: true).speed(2), value: manager.isNotWord == true && manager.currentLine == gameRow)
+        }.modifier(ShakeEffect(shakes: manager.isNotWord && manager.currentLine == gameRow ? 4 : 0))
+            .animation(.default.repeatCount(1, autoreverses: true).speed(0.25), value: manager.isNotWord == true && manager.currentLine == gameRow)
     }
 }
 
