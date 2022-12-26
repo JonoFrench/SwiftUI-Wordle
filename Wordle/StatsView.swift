@@ -21,7 +21,8 @@ extension Int32 {
 
 struct StatsView: View {
     @EnvironmentObject var manager: UserManager
-    
+    @Environment(\.colorScheme) var colorScheme
+
     var body: some View {
         ZStack {
             closeButton
@@ -134,7 +135,7 @@ struct StatsView: View {
     }
     
     var closeButton: some View {
-        VStack {
+       VStack {
             HStack {
                 Spacer()
                 Button(action: {
@@ -142,7 +143,7 @@ struct StatsView: View {
                 }) {
                     Image(systemName: "xmark.circle")
                         .padding(10)
-                        .foregroundColor(.black)
+                        .foregroundColor(colorScheme == .dark ? .white : .black)
                 }
             }
             .padding(.top, 5)

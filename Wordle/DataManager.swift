@@ -77,7 +77,7 @@ class DataManager {
     
     func seed() {
 //        let words = GameWords()
-        
+        print("Seeding")
         //Seed Stats
         let newStats = GameStats(context: context)
         newStats.lastUpdated = Date()
@@ -133,14 +133,14 @@ class DataManager {
                 if result.count == 0 {
                     self.seed()
                     self.fetchStats()
+                } else {
+                    self.userManager.playerStats = result.first
                 }
-                self.userManager.playerStats = result.first
             } catch {
                 print("Unable to Execute Fetch Request, \(error)")
             }
         }
     }
-    
     
     func fetchGames() {
         let fetchRequest: NSFetchRequest<Games> = Games.fetchRequest()

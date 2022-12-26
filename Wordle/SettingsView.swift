@@ -9,6 +9,8 @@ import SwiftUI
 
 struct SettingsView: View {
     @Binding var showingSettings: Bool
+    @EnvironmentObject var manager: UserManager
+    @Environment(\.colorScheme) var colorScheme
 
     var body: some View {
         ZStack{
@@ -28,7 +30,7 @@ struct SettingsView: View {
                 }) {
                     Image(systemName: "xmark.circle")
                         .padding(10)
-                        .foregroundColor(.black)
+                        .foregroundColor(colorScheme == .dark ? .white : .black)
                 }
             }
             .padding(.top, 5)

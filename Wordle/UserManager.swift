@@ -11,9 +11,10 @@ import CoreData
 
 class UserManager: ObservableObject {
     var gameWords = GameWords()
-    
+    @Environment(\.colorScheme) var colorScheme
+
     @Published var line1: [KeyItem] = [KeyItem("Q"),KeyItem("W"),KeyItem("E"),KeyItem("R"),KeyItem("T"),KeyItem("Y"),KeyItem("U"),KeyItem("I"),KeyItem("O"),KeyItem("P")]
-    @Published var line2: [KeyItem] = [KeyItem("A"),KeyItem("S"),KeyItem("D"),KeyItem("F"),KeyItem("G"),KeyItem("H"),KeyItem("K"),KeyItem("L")]
+    @Published var line2: [KeyItem] = [KeyItem("A"),KeyItem("S"),KeyItem("D"),KeyItem("F"),KeyItem("G"),KeyItem("H"),KeyItem("J"),KeyItem("K"),KeyItem("L")]
     @Published var line3: [KeyItem] = [KeyItem("Z"),KeyItem("X"),KeyItem("C"),KeyItem("V"),KeyItem("B"),KeyItem("N"),KeyItem("M")]
     @Published
     var currentLine = 0
@@ -70,9 +71,9 @@ class UserManager: ObservableObject {
             }
         }
         let dataManager = DataManager(userManager: self)
-        dataManager.clearData(entity: "GameStats")
-        dataManager.clearData(entity: "Games")
-        dataManager.seed()
+        //dataManager.clearData(entity: "GameStats")
+        //dataManager.clearData(entity: "Games")
+        //dataManager.seed()
         dataManager.fetchStats()
         dataManager.fetchGames()
     }
@@ -98,6 +99,7 @@ class UserManager: ObservableObject {
     }
     
     func checkEnter() {
+        isNotWord = false
         if currentPosition != 4 {
             return
         }
@@ -112,11 +114,12 @@ class UserManager: ObservableObject {
         
         if gameWords.checkAnswer(word: word) == false {
             // not in word list
-            isNotWord.toggle()
+            isNotWord = true
             isNotWordView = true
             DispatchQueue.main.asyncAfter(deadline: .now() + 1) {
                 self.isNotWordView = false
                 self.inputDisabled = false
+                self.isNotWord = false
             }
             return
         }

@@ -9,6 +9,8 @@ import SwiftUI
 
 struct HelpView: View {
     @Binding var showingHelp: Bool
+    @EnvironmentObject var manager: UserManager
+    @Environment(\.colorScheme) var colorScheme
 
     var body: some View {
         ZStack {
@@ -49,7 +51,7 @@ struct HelpView: View {
                 }) {
                     Image(systemName: "xmark.circle")
                         .padding(10)
-                        .foregroundColor(.black)
+                        .foregroundColor(colorScheme == .dark ? .white : .black)
                 }
             }
             .padding(.top, 5)

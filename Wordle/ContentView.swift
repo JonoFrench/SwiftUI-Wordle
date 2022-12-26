@@ -10,12 +10,14 @@ import CoreData
 
 struct ContentView: View {
     @EnvironmentObject var manager: UserManager
+    @Environment(\.colorScheme) var colorScheme
     @State private var showingSettings = false
     @State private var showingHelp = false
 
     var body: some View {
         NavigationView {
             ZStack(alignment: .top) {
+                Color("Background")
                 if manager.isNotWordView {
                     noWord()
                 }
@@ -37,7 +39,7 @@ struct ContentView: View {
                     ToolbarItem(placement: .navigationBarTrailing) {
                         Button(action: {showingSettings = true}) {
                             Label("Settings", systemImage: "gearshape.fill")
-                                .foregroundColor(.black)
+                                .foregroundColor(colorScheme == .dark ? .white : .black)
                         }.popover(isPresented: $showingSettings) {
                             SettingsView(showingSettings: $showingSettings)
                         }
@@ -45,7 +47,7 @@ struct ContentView: View {
                     ToolbarItem {
                         Button(action: {showingHelp = true}) {
                             Label("Help", systemImage: "questionmark.circle")
-                                .foregroundColor(.black)
+                                .foregroundColor(colorScheme == .dark ? .white : .black)
                         }.popover(isPresented: $showingHelp) {
                             HelpView(showingHelp: $showingHelp)
                          }
@@ -53,7 +55,7 @@ struct ContentView: View {
                     ToolbarItem {
                         Button(action: {manager.showingStats = true}) {
                             Label("Statistics", systemImage: "rectangle.3.offgrid")
-                                .foregroundColor(.black)
+                                .foregroundColor(colorScheme == .dark ? .white : .black)
                         }.popover(isPresented: $manager.showingStats) {
                             StatsView()
                          }
@@ -64,6 +66,8 @@ struct ContentView: View {
     }
     
     struct noWord: View {
+        @EnvironmentObject var manager: UserManager
+        @Environment(\.colorScheme) var colorScheme
         var body: some View {
             VStack {
                 Label ("Not a word", image: "")
@@ -71,14 +75,15 @@ struct ContentView: View {
                     .fontWeight(.bold)
                     .labelStyle(.titleOnly)
                     .frame(width: 100, height: 30,alignment: .center)
-                    .foregroundColor(.white)
-                    .background(Color.black)
+                    .foregroundColor(colorScheme == .dark ? .white : .black)
+                    .background(colorScheme == .dark ? .black : .white)
             }.padding(.top, 20)
         }
     }
 
     struct finishView: View {
         @EnvironmentObject var manager: UserManager
+        @Environment(\.colorScheme) var colorScheme
         var body: some View {
             VStack {
                 Label (manager.finishMessage, image: "")
@@ -86,8 +91,8 @@ struct ContentView: View {
                     .fontWeight(.bold)
                     .labelStyle(.titleOnly)
                     .frame(width: 100, height: 30,alignment: .center)
-                    .foregroundColor(.white)
-                    .background(Color.black)
+                    .foregroundColor(colorScheme == .dark ? .white : .black)
+                    .background(colorScheme == .dark ? .black : .white)
             }.padding(.top, 20)
         }
     }

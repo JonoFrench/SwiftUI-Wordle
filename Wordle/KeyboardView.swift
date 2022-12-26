@@ -9,7 +9,7 @@ import SwiftUI
 
 struct KeyboardView: View {
     @EnvironmentObject var manager: UserManager
-    
+
     var body: some View {
         VStack {
             KeyboardLine(line: manager.line1)
@@ -28,13 +28,14 @@ func KeyboardLine(line: [KeyItem]) -> some View {
         ForEach(line) { letter in
             KeyButton(keyItem: letter)
         }
-    }
+    }.fixedSize(horizontal: true, vertical: false)
 }
 
 struct KeyButton : View {
     var keyItem: KeyItem
     @EnvironmentObject var manager: UserManager
-    
+    @Environment(\.colorScheme) var colorScheme
+
     var body: some View {
         Button {
             manager.wordsArray[manager.currentLine][manager.currentPosition].key = keyItem.key.uppercased()
@@ -44,7 +45,7 @@ struct KeyButton : View {
             print(keyItem.key,keyItem.used)
         } label: {
                 Text(keyItem.key)
-                .foregroundColor(keyItem.foregroundColor)
+                .foregroundColor(colorScheme == .dark ? .white : keyItem.foregroundColor)
                 .frame(minHeight: 30)
                 .padding(-2)
         }
@@ -56,7 +57,8 @@ struct KeyButton : View {
 
 struct BackButton : View {
     @EnvironmentObject var manager: UserManager
-    
+    @Environment(\.colorScheme) var colorScheme
+
     var body: some View {
         Button(action: {
             if manager.wordsArray[manager.currentLine][manager.currentPosition].key == "" {
@@ -72,7 +74,7 @@ struct BackButton : View {
         }){
             Label("", systemImage: "delete.left")
                 .background(Color(UIColor.systemGray5))
-                .foregroundColor(.black)
+                .foregroundColor(colorScheme == .dark ? .white : .black)
                 .frame(maxWidth: 16, minHeight: 30)
                 .labelStyle(.iconOnly)
         }
@@ -82,13 +84,14 @@ struct BackButton : View {
 }
 struct EnterButton : View {
     @EnvironmentObject var manager: UserManager
-    
+    @Environment(\.colorScheme) var colorScheme
+
     var body: some View {
         Button(action: {
             manager.checkEnter()
         }){
             Text("Enter")
-                .foregroundColor(.black)
+                .foregroundColor(colorScheme == .dark ? .white : .black)
                 .font(.system(size: 10, weight: Font.Weight.bold))
                 .frame(minHeight: 30)
         }
