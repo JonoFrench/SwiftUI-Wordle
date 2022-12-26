@@ -61,7 +61,7 @@ struct ContentView: View {
                          }
                     }
                 }.navigationTitle("SwiftUI Wordle")
-            }.navigationBarTitle("Wordle", displayMode: .inline)
+            }
         }
     }
     
@@ -75,8 +75,8 @@ struct ContentView: View {
                     .fontWeight(.bold)
                     .labelStyle(.titleOnly)
                     .frame(width: 100, height: 30,alignment: .center)
-                    .foregroundColor(colorScheme == .dark ? .white : .black)
-                    .background(colorScheme == .dark ? .black : .white)
+                    .foregroundColor(colorScheme == .dark ? .black : .white)
+                    .background(colorScheme == .dark ? .white : .black)
             }.padding(.top, 20)
         }
     }
@@ -86,13 +86,13 @@ struct ContentView: View {
         @Environment(\.colorScheme) var colorScheme
         var body: some View {
             VStack {
-                Label (manager.finishMessage, image: "")
+                Label (manager.winner == true ? manager.finishMessage : manager.gameWords.todaysWord, image: "")
                     .font(.caption)
                     .fontWeight(.bold)
                     .labelStyle(.titleOnly)
                     .frame(width: 100, height: 30,alignment: .center)
-                    .foregroundColor(colorScheme == .dark ? .white : .black)
-                    .background(colorScheme == .dark ? .black : .white)
+                    .foregroundColor(colorScheme == .dark ? .black : .white)
+                    .background(colorScheme == .dark ? .white : .black)
             }.padding(.top, 20)
         }
     }

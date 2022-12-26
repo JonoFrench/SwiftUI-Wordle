@@ -96,6 +96,7 @@ struct EnterButton : View {
                 .frame(minHeight: 30)
         }
         .buttonStyle(.bordered)
+        .padding(-1)
     }
 }
 

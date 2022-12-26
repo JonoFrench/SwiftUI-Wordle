@@ -7,18 +7,6 @@
 
 import SwiftUI
 
-extension Int {
-    func floatValue() -> Float {
-        return Float(self)
-    }
-}
-
-extension Int32 {
-    func floatValue() -> Float {
-        return Float(self)
-    }
-}
-
 struct StatsView: View {
     @EnvironmentObject var manager: UserManager
     @Environment(\.colorScheme) var colorScheme
@@ -50,7 +38,7 @@ struct StatsView: View {
                 VStack {
                     ForEach(0...5, id: \.self) { item in
                         let percent = manager.gamesPlayed > 0 ? Int((manager.gameStats[item].floatValue() / manager.gamesPlayed.floatValue()) * 100) : 0
-                        BarHView(row: item + 1, value: manager.gameStats[item], percent: percent, currentLine: manager.currentLine, winner: manager.winner)
+                        HBarView(row: item + 1, value: manager.gameStats[item], percent: percent, currentLine: manager.currentLine, winner: manager.winner)
                     }
                 }
                 .frame(height:350,alignment: .top)
@@ -65,7 +53,6 @@ struct StatsView: View {
                         .tint(.green)
                     Spacer()
                     Button {
-                        print("Play button was tapped")
                         manager.reset()
                         manager.showingStats = false
                     } label: {
@@ -80,7 +67,6 @@ struct StatsView: View {
         }
     }
     
-    
     fileprivate func statBox(title:String, stat:String) -> VStack<TupleView<(Text, Text)>> {
         return VStack{
             Text(stat).font(.system(size: 30))
@@ -88,7 +74,7 @@ struct StatsView: View {
         }
     }
     
-    struct BarHView: View {
+    struct HBarView: View {
         var row:Int
         var value: Int
         var percent: Int
@@ -106,7 +92,7 @@ struct StatsView: View {
                     Spacer()
                         .frame(height:padHeight)
                     
-                    let barSize = (CGFloat(percent)/100) * scaleFactor + 25.0
+                    let barSize = (CGFloat(percent)/100) * scaleFactor + 20.0
                     
                     HStack(spacing: 0) {
                         Text("\(row)")
@@ -121,7 +107,7 @@ struct StatsView: View {
                                     .font(.footnote)
                                     .foregroundColor(.white)
                                     .fontWeight(.bold)
-                                    .offset(x:-10, y:0)
+                                    .offset(x:value == 0 ? -6: -10, y:0)
                                 ,
                                 alignment: .trailing
                             )

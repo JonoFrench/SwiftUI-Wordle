@@ -100,6 +100,7 @@ class UserManager: ObservableObject {
     
     func checkEnter() {
         isNotWord = false
+        // If not at end of line return
         if currentPosition != 4 {
             return
         }
@@ -112,8 +113,8 @@ class UserManager: ObservableObject {
         }
         print(word)
         
+        // Check if it's actually in the accepted word list.
         if gameWords.checkAnswer(word: word) == false {
-            // not in word list
             isNotWord = true
             isNotWordView = true
             DispatchQueue.main.asyncAfter(deadline: .now() + 1) {
@@ -124,6 +125,7 @@ class UserManager: ObservableObject {
             return
         }
         
+        // Process the guess
         let guess = gameWords.checkGuess(word: word)
         for (index, element) in guess.enumerated() {
             wordsArray[currentLine][index].result = element
@@ -229,4 +231,17 @@ extension KeyItem {
         }
     }
 }
+
+extension Int {
+    func floatValue() -> Float {
+        return Float(self)
+    }
+}
+
+extension Int32 {
+    func floatValue() -> Float {
+        return Float(self)
+    }
+}
+
 
