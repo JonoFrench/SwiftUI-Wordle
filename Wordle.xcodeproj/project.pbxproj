@@ -18,7 +18,6 @@
 		34C3B25B28F6CDDC000B0118 /* ContentView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 34C3B25A28F6CDDC000B0118 /* ContentView.swift */; };
 		34C3B25D28F6CDDD000B0118 /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 34C3B25C28F6CDDD000B0118 /* Assets.xcassets */; };
 		34C3B26028F6CDDD000B0118 /* Preview Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 34C3B25F28F6CDDD000B0118 /* Preview Assets.xcassets */; };
-		34C3B26228F6CDDD000B0118 /* Persistence.swift in Sources */ = {isa = PBXBuildFile; fileRef = 34C3B26128F6CDDD000B0118 /* Persistence.swift */; };
 		34C3B26F28F6CDDD000B0118 /* WordleTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 34C3B26E28F6CDDD000B0118 /* WordleTests.swift */; };
 		34C3B27928F6CDDD000B0118 /* WordleUITests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 34C3B27828F6CDDD000B0118 /* WordleUITests.swift */; };
 		34C3B27B28F6CDDD000B0118 /* WordleUITestsLaunchTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 34C3B27A28F6CDDD000B0118 /* WordleUITestsLaunchTests.swift */; };
@@ -65,7 +64,6 @@
 		34C3B25A28F6CDDC000B0118 /* ContentView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ContentView.swift; sourceTree = "<group>"; };
 		34C3B25C28F6CDDD000B0118 /* Assets.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; path = Assets.xcassets; sourceTree = "<group>"; };
 		34C3B25F28F6CDDD000B0118 /* Preview Assets.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; path = "Preview Assets.xcassets"; sourceTree = "<group>"; };
-		34C3B26128F6CDDD000B0118 /* Persistence.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Persistence.swift; sourceTree = "<group>"; };
 		34C3B26A28F6CDDD000B0118 /* WordleTests.xctest */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; path = WordleTests.xctest; sourceTree = BUILT_PRODUCTS_DIR; };
 		34C3B26E28F6CDDD000B0118 /* WordleTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = WordleTests.swift; sourceTree = "<group>"; };
 		34C3B27428F6CDDD000B0118 /* WordleUITests.xctest */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; path = WordleUITests.xctest; sourceTree = BUILT_PRODUCTS_DIR; };
@@ -142,7 +140,6 @@
 				34C3B25828F6CDDC000B0118 /* WordleApp.swift */,
 				34C3B25A28F6CDDC000B0118 /* ContentView.swift */,
 				34C3B25C28F6CDDD000B0118 /* Assets.xcassets */,
-				34C3B26128F6CDDD000B0118 /* Persistence.swift */,
 				34C3B25E28F6CDDD000B0118 /* Preview Content */,
 				34C3B28728F6CEB9000B0118 /* KeyboardView.swift */,
 				34C3B28928F6D003000B0118 /* UserManager.swift */,
@@ -328,7 +325,6 @@
 				34E5A62729531DED0008687D /* Wordle.xcdatamodeld in Sources */,
 				34C3B28A28F6D003000B0118 /* UserManager.swift in Sources */,
 				344BD68A290983E5007AD84F /* DataManager.swift in Sources */,
-				34C3B26228F6CDDD000B0118 /* Persistence.swift in Sources */,
 				348028F02901813E006DED05 /* HelpView.swift in Sources */,
 				348028EB28F98D64006DED05 /* GameWords.swift in Sources */,
 				34C3B25B28F6CDDC000B0118 /* ContentView.swift in Sources */,
