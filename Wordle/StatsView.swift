@@ -10,6 +10,7 @@ import SwiftUI
 struct StatsView: View {
     @EnvironmentObject var manager: UserManager
     @Environment(\.colorScheme) var colorScheme
+    @State var showSheet = false
 
     var body: some View {
         ZStack {
@@ -47,10 +48,14 @@ struct StatsView: View {
                     Spacer()
                     Button {
                         print("Share button was tapped")
+                        self.showSheet.toggle()
                     } label: {
                         Label("Share", systemImage: "square.and.arrow.up")
                     }.buttonStyle(.borderedProminent)
                         .tint(.green)
+                        .sheet(isPresented: $showSheet) {
+                            ActivityView(text:manager.textExport() , showing: self.$showSheet)
+                        }
                     Spacer()
                     Button {
                         manager.reset()
@@ -136,6 +141,26 @@ struct StatsView: View {
             Spacer()
         }
     }
+    
+    struct ActivityView: UIViewControllerRepresentable {
+        var text: String
+        @Binding var showing: Bool
+
+        func makeUIViewController(context: Context) -> UIActivityViewController {
+            let vc = UIActivityViewController(
+                activityItems: [text],
+                applicationActivities: nil
+            )
+            vc.completionWithItemsHandler = { (activityType, completed, returnedItems, error) in
+                self.showing = false
+            }
+            return vc
+        }
+
+        func updateUIViewController(_ uiViewController: UIActivityViewController, context: Context) {
+        }
+    }
+    
 }
 
 //struct StatsView_Previews: PreviewProvider {

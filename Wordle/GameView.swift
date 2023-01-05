@@ -28,22 +28,24 @@ struct LetterLine: View {
             Spacer()
             ForEach(Array(letterRows.enumerated()), id: \.offset) { index, letter in
                 if gameRow >= manager.currentLine {
-                    FlipLetter(frontView: frontLetterView(letter: letter, letterPos: index), backView: backLetterView(letter: letter, letterPos: index), index: index, gameRow: gameRow)
+                    FlipLetter(frontView: frontLetterView(letter: letter, letterPos: index), backView: backLetterView(letter: letter, letterPos: index,letterRow: gameRow), index: index, gameRow: gameRow)
                 } else {
-                    backLetterView(letter: letter,letterPos: index)
+                    backLetterView(letter: letter,letterPos: index,letterRow: gameRow)
                 }
             }
             Spacer()
         }.modifier(ShakeEffect(shakes: manager.isNotWord && manager.currentLine == gameRow ? 4 : 0))
-            .animation(.default.repeatCount(1, autoreverses: true).speed(0.25), value: manager.isNotWord && manager.currentLine == gameRow)
+            .animation(.default.repeatCount(0, autoreverses: true).speed(0.25), value: manager.isNotWord && manager.currentLine == gameRow)
     }
 }
 
 struct backLetterView: View {
     var letter : LetterItem
-    var letterPos : Int
-    var body: some View {
-        GeometryReader { geometry in
+    @State var letterPos : Int
+    @State var letterRow : Int
+    @EnvironmentObject var manager: UserManager
+    
+    var body: some View {        
             Label (letter.key, image: "")
                 .font(.largeTitle)
                 .fontWeight(.bold)
@@ -51,17 +53,15 @@ struct backLetterView: View {
                 .frame(width: 50, height: 50,alignment: .center)
                 .foregroundColor(.white)
                 .background(letter.backgroundColor)
-        }.background(letter.backgroundColor)
-            .frame(width: 50, height: 50,alignment: .center)
+                .modifier(BounceEffect(bounces: manager.showBounce[letterRow][letterPos] && manager.winner ? 1 : 0))
+                .animation(.spring(response: 0.55, dampingFraction: 0.75, blendDuration: 0).repeatCount(0, autoreverses: false),value: manager.showBounce[letterRow][letterPos] && manager.winner)
     }
-    
 }
 
 struct frontLetterView: View {
     var letter : LetterItem
     var letterPos : Int
     var body: some View {
-        GeometryReader { geometry in
             Label (letter.key, image: "")
                 .font(.largeTitle)
                 .fontWeight(.bold)
@@ -69,8 +69,6 @@ struct frontLetterView: View {
                 .frame(width: 50, height: 50,alignment: .center)
                 .foregroundColor(.white)
                 .background(Color(UIColor.lightGray))
-        }.background(Color(UIColor.lightGray))
-            .frame(width: 50, height: 50,alignment: .center)
     }
     
 }
@@ -82,6 +80,22 @@ struct ShakeEffect: GeometryEffect {
     
     init(shakes: Int) {
         position = CGFloat(shakes)
+    }
+    
+    var position: CGFloat
+    var animatableData: CGFloat {
+        get { position }
+        set { position = newValue }
+    }
+}
+
+struct BounceEffect: GeometryEffect {
+    func effectValue(size: CGSize) -> ProjectionTransform {
+        return ProjectionTransform(CGAffineTransform(translationX: 0, y: -40 * sin(position * 2 * .pi)))
+    }
+    
+    init(bounces: Int) {
+        position = CGFloat(bounces)
     }
     
     var position: CGFloat

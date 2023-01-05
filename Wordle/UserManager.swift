@@ -13,11 +13,8 @@ class UserManager: ObservableObject {
     var gameWords = GameWords()
     @Environment(\.colorScheme) var colorScheme
 
-    //@Published
     var line1: [KeyItem] = [KeyItem("Q"),KeyItem("W"),KeyItem("E"),KeyItem("R"),KeyItem("T"),KeyItem("Y"),KeyItem("U"),KeyItem("I"),KeyItem("O"),KeyItem("P")]
-    //@Published
     var line2: [KeyItem] = [KeyItem("A"),KeyItem("S"),KeyItem("D"),KeyItem("F"),KeyItem("G"),KeyItem("H"),KeyItem("J"),KeyItem("K"),KeyItem("L")]
-    //@Published
     var line3: [KeyItem] = [KeyItem("Z"),KeyItem("X"),KeyItem("C"),KeyItem("V"),KeyItem("B"),KeyItem("N"),KeyItem("M")]
     @Published
     var currentLine = 0
@@ -31,19 +28,18 @@ class UserManager: ObservableObject {
     var isNotWordView = false
     @Published
     var gameOver = false
-    
+    @Published
     var winner = false
-    
     @Published
     var showingStats = false
     @Published
     var showBack = [[Bool]](repeating: [Bool](repeating: false, count: 5), count: 6)
     @Published
+    var showBounce = [[Bool]](repeating: [Bool](repeating: false, count: 5), count: 6)
+    @Published
     var currentFlip = 0
-
     @Published
     var inputDisabled = false
-
     
     /// Stats stuff
     
@@ -75,19 +71,19 @@ class UserManager: ObservableObject {
         }
         let dataManager = DataManager(userManager: self)
         
-        // Uncomment to reset the data
+        // Uncomment to reset the data or use the option on the settings view.
         //dataManager.clearData(entity: "GameStats")
         //dataManager.clearData(entity: "Games")
         dataManager.fetchStats()
         dataManager.fetchGames()
     }
    
-    
     func reset() {
         for x in 0...5 {
             for y in 0...4 {
                 wordsArray[x][y] = LetterItem("")
                 showBack[x][y] = false
+                showBounce[x][y] = false
             }
         }
         
@@ -156,7 +152,7 @@ class UserManager: ObservableObject {
                 self.showBack[self.currentFlip][i] = true
             }
         }
-        
+        // Wait 3 seconds to then process the result
         DispatchQueue.main.asyncAfter(deadline: .now() + 3) {
             if self.gameWords.compareGuess(word: word) == false {
                 self.currentPosition = 0
@@ -165,11 +161,12 @@ class UserManager: ObservableObject {
                     self.winner = false
                     let dataManager = DataManager(userManager: self)
                     dataManager.update()
+                    // Game over failed, show stats after 3 seconds
                     DispatchQueue.main.asyncAfter(deadline: .now() + 3) {
                         self.gameOver = false
                         self.showingStats = true
                     }
-                } else {
+                } else { // Next Line
                     self.currentLine += 1
                     self.inputDisabled = false
                 }
@@ -181,13 +178,46 @@ class UserManager: ObservableObject {
                 self.winner = true
                 let dataManager = DataManager(userManager: self)
                 dataManager.update()
-                DispatchQueue.main.asyncAfter(deadline: .now() + 3) {
+                // Animate the winning row.
+                for i in 0...4 {
+                    DispatchQueue.main.asyncAfter(deadline: .now() + ( Double(i) / 10)) {
+                        self.showBounce[self.currentLine][i] = true
+                    }
+                }
+                // Then wait 4 seconds before showing the Stats
+                DispatchQueue.main.asyncAfter(deadline: .now() + 4) {
                     self.gameOver = false
                     self.showingStats = true
                     return
                 }
             }
         }
+    }
+    // Create string of game to share etc.
+    
+    func textExport() -> String {
+        var txt = "SwiftUI Wordle Game 1"
+        txt = txt + "\r\n"
+        for x in 0...currentLine {
+            for y in 0...4 {
+                txt = txt + gameChar(wordEnum: wordsArray[x][y].result)
+            }
+            txt = txt + "\r\n"
+        }
+        return txt
+    }
+    
+    private func gameChar(wordEnum: wordResults) -> String {
+        let greenBox = "🟩"
+        let yellowBox = "🟨"
+        let greyBox = "⬜"
+
+        switch wordEnum {
+        case .yes : return greenBox
+        case .included : return yellowBox
+        case .blank, .no : return greyBox
+        }
+        
     }
 }
 
