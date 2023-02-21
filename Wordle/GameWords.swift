@@ -56,7 +56,21 @@ struct GameWords {
             if guessChars[i] == todaysChars[i] {
                 results.append(.yes)
                 usedChars.append(guessChars[i])
-            } else if todaysChars.contains(guessChars[i]) && !usedChars.contains(guessChars[i]){
+            } else if todaysChars.filter({$0 == guessChars[i]}).count > 1 && !usedChars.contains(guessChars[i]){
+                results.append(.included)
+                usedChars.append(guessChars[i])
+
+            }  else if todaysChars.filter({$0 == guessChars[i]}).count > 1 && guessChars.filter({$0 == guessChars[i]}).count > 1 {
+                results.append(.included)
+                usedChars.append(guessChars[i])
+            } else if todaysChars.filter({$0 == guessChars[i]}).count > 1 && usedChars.contains(guessChars[i]){
+                results.append(.no)
+            } else if guessChars.filter({$0 == guessChars[i]}).count > 1 && !usedChars.contains(guessChars[i]){
+                results.append(.no)
+               // usedChars.append(guessChars[i])
+            }
+            
+            else if todaysChars.contains(guessChars[i]) && !usedChars.contains(guessChars[i]){
                 results.append(.included)
                 usedChars.append(guessChars[i])
             } else {

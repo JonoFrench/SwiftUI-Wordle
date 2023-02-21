@@ -7,6 +7,7 @@
 
 import SwiftUI
 
+
 struct GameView: View {
     @EnvironmentObject var manager: UserManager
     

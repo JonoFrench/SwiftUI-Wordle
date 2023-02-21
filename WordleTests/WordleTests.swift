@@ -10,7 +10,7 @@ import XCTest
 
 final class WordleTests: XCTestCase {
 
-    let words = GameWords()
+    var words = GameWords()
 
     override func setUpWithError() throws {
         // Put setup code here. This method is called before the invocation of each test method in the class.
@@ -81,10 +81,22 @@ final class WordleTests: XCTestCase {
         //test guess contains same two letters in incorrect place
         results = [.included,.included,.no,.no,.no]
         XCTAssert(words.checkGuess(word: "llxxx") == results)
-        
-        //test guess contains one letter in correct place one letter incorrect place
+
+        //test guess contains one letter in correct place one letter incorrect place. Correct first
         results = [.no,.no,.yes,.no,.included]
         XCTAssert(words.checkGuess(word: "xxlxl") == results)
+
+        //test guess contains one letter in correct place one letter incorrect place. Correct last
+        results = [.included,.no,.yes,.no,.no]
+        XCTAssert(words.checkGuess(word: "lxlxx") == results)
+
+        //test guess contains two same letters, answer has only one in it, one in correct place. Correct last
+        results = [.no,.yes,.no,.no,.no]
+        XCTAssert(words.checkGuess(word: "eexxx") == results)
+
+        //test guess contains two same letters, answer has only one in it, one in correct place. Correct first
+        results = [.no,.yes,.no,.no,.no]
+        XCTAssert(words.checkGuess(word: "xexxe") == results)
 
         
     }
