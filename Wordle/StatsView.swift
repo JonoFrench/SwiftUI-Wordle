@@ -58,8 +58,8 @@ struct StatsView: View {
                         }
                     Spacer()
                     Button {
-                        manager.reset()
                         manager.showingStats = false
+                        manager.reset()
                     } label: {
                         Label("Play Again", systemImage: "")
                     }.buttonStyle(.borderedProminent)

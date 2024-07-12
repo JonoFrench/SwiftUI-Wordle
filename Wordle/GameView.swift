@@ -14,7 +14,7 @@ struct GameView: View {
     var body: some View {
         VStack {
             ForEach(Array(manager.wordsArray.enumerated()), id: \.offset) { index, row in
-                LetterLine(letterRows: row,gameRow: index)
+                LetterLine(letterRows: row,gameRow: index).zIndex(index == manager.currentLine ? 10 : Double(0 - index))
             }
         }
     }
@@ -28,15 +28,23 @@ struct LetterLine: View {
         HStack {
             Spacer()
             ForEach(Array(letterRows.enumerated()), id: \.offset) { index, letter in
-                if gameRow >= manager.currentLine {
-                    FlipLetter(frontView: frontLetterView(letter: letter, letterPos: index), backView: backLetterView(letter: letter, letterPos: index,letterRow: gameRow), index: index, gameRow: gameRow)
+                if gameRow == manager.currentLine {
+                    FlipLetter(frontView: frontLetterView(letter: letter, letterPos: index), backView: backLetterView(letter: letter, letterPos: index,letterRow: gameRow), index: index, gameRow: gameRow).zIndex(1.0)
                 } else {
-                    backLetterView(letter: letter,letterPos: index,letterRow: gameRow)
+                    backLetterView(letter: letter,letterPos: index,letterRow: gameRow).zIndex(0)
                 }
             }
             Spacer()
         }.modifier(ShakeEffect(shakes: manager.isNotWord && manager.currentLine == gameRow ? 4 : 0))
-            .animation(.default.repeatCount(0, autoreverses: true).speed(0.25), value: manager.isNotWord && manager.currentLine == gameRow)
+            .animation(.default.repeatCount(0, autoreverses: false).speed(0.25), value: manager.isNotWord && manager.currentLine == gameRow)
+            .transaction { transaction in
+                if !manager.isNotWord {
+                    transaction.animation = nil
+                }
+            }
+            .onAppear{
+                manager.isNotWord = false
+            }
     }
 }
 
@@ -54,8 +62,9 @@ struct backLetterView: View {
                 .frame(width: 50, height: 50,alignment: .center)
                 .foregroundColor(.white)
                 .background(letter.backgroundColor)
-                .modifier(BounceEffect(bounces: manager.showBounce[letterRow][letterPos] && manager.winner ? 1 : 0))
+                .modifier(BounceEffect(bounces: manager.showBounce[letterRow][letterPos] && manager.winner ? 1 : 0)).zIndex(100.0)
                 .animation(.spring(response: 0.55, dampingFraction: 0.75, blendDuration: 0).repeatCount(0, autoreverses: false),value: manager.showBounce[letterRow][letterPos] && manager.winner)
+                .zIndex(100.0)
     }
 }
 
@@ -119,10 +128,25 @@ struct FlipLetter<FrontView: View, BackView: View>: View {
             frontView
                 .modifier(FlipOpacity(percentage: manager.showBack[manager.currentFlip][index] && manager.currentFlip >= gameRow ? 0 : 1))
                 .rotation3DEffect(Angle.degrees(manager.showBack[manager.currentFlip][index] && manager.currentFlip >= gameRow ? 180 : 360), axis: (1,0,0))
+                .transaction { transaction in
+                    if manager.isReset {
+                        transaction.animation = nil
+                    }
+                }
             backView
                 .modifier(FlipOpacity(percentage: manager.showBack[manager.currentFlip][index] && manager.currentFlip >= gameRow ? 1 : 0))
                 .rotation3DEffect(Angle.degrees(manager.showBack[manager.currentFlip][index] && manager.currentFlip >= gameRow ? 0 : 180), axis: (1,0,0))
+                .transaction { transaction in
+                    if manager.isReset {
+                        transaction.animation = nil
+                    }
+                }
         }.animation(.default.repeatCount(0, autoreverses: false).speed(0.4), value: manager.showBack[gameRow][index] && manager.currentFlip >= gameRow)
+            .onAppear{
+                if manager.isReset {
+                    manager.isReset = false
+                }
+            }
     }
 }
 

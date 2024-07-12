@@ -12,7 +12,7 @@ import CoreData
 class UserManager: ObservableObject {
     var gameWords = GameWords()
     @Environment(\.colorScheme) var colorScheme
-
+    
     var line1: [KeyItem] = [KeyItem("Q"),KeyItem("W"),KeyItem("E"),KeyItem("R"),KeyItem("T"),KeyItem("Y"),KeyItem("U"),KeyItem("I"),KeyItem("O"),KeyItem("P")]
     var line2: [KeyItem] = [KeyItem("A"),KeyItem("S"),KeyItem("D"),KeyItem("F"),KeyItem("G"),KeyItem("H"),KeyItem("J"),KeyItem("K"),KeyItem("L")]
     var line3: [KeyItem] = [KeyItem("Z"),KeyItem("X"),KeyItem("C"),KeyItem("V"),KeyItem("B"),KeyItem("N"),KeyItem("M")]
@@ -22,7 +22,7 @@ class UserManager: ObservableObject {
     var currentPosition = 0
     @Published
     var wordsArray = [[LetterItem]](repeating: [LetterItem](repeating: LetterItem(""), count: 5), count: 6)
-    @Published
+    //@Published
     var isNotWord = false
     @Published
     var isNotWordView = false
@@ -40,6 +40,8 @@ class UserManager: ObservableObject {
     var currentFlip = 0
     @Published
     var inputDisabled = false
+    //@Published
+    var isReset = false
     
     /// Stats stuff
     
@@ -77,8 +79,9 @@ class UserManager: ObservableObject {
         dataManager.fetchStats()
         dataManager.fetchGames()
     }
-   
+    
     func reset() {
+        isReset = true
         for x in 0...5 {
             for y in 0...4 {
                 wordsArray[x][y] = LetterItem("")
@@ -95,13 +98,15 @@ class UserManager: ObservableObject {
         isNotWord = false
         winner = false
         inputDisabled = false
+        //isReset = false
         gameWords.todaysWord = gameWords.getWord()
     }
+
     
     func checkEnter() {
         isNotWord = false
         // If not at end of line return
-        if currentPosition != 4 {
+        guard currentPosition == 4 else {
             return
         }
         self.inputDisabled = true
