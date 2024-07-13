@@ -64,41 +64,50 @@ final class WordleTests: XCTestCase {
         
         //test guess contains one letter in correct place
         results = [.yes,.no,.no,.no,.no]
-        XCTAssert(words.checkGuess(word: "hxxxx") == results)
+        XCTAssert(words.checkGuess(word: "habcd") == results)
 
         //test guess contains no letters in any place
         results = [.no,.no,.no,.no,.no]
-        XCTAssert(words.checkGuess(word: "xxxxx") == results)
+        XCTAssert(words.checkGuess(word: "abcdf") == results)
 
         //test guess contains one letter in incorrect place
         results = [.no,.included,.no,.no,.no]
-        XCTAssert(words.checkGuess(word: "xhxxx") == results)
+        XCTAssert(words.checkGuess(word: "ahbcd") == results)
 
         //test guess contains same two letters in correct place
         results = [.no,.no,.yes,.yes,.no]
-        XCTAssert(words.checkGuess(word: "xxllx") == results)
+        XCTAssert(words.checkGuess(word: "abllc") == results)
 
         //test guess contains same two letters in incorrect place
         results = [.included,.included,.no,.no,.no]
-        XCTAssert(words.checkGuess(word: "llxxx") == results)
+        XCTAssert(words.checkGuess(word: "llabc") == results)
 
         //test guess contains one letter in correct place one letter incorrect place. Correct first
         results = [.no,.no,.yes,.no,.included]
-        XCTAssert(words.checkGuess(word: "xxlxl") == results)
+        XCTAssert(words.checkGuess(word: "ablcl") == results)
 
         //test guess contains one letter in correct place one letter incorrect place. Correct last
-        results = [.included,.no,.yes,.no,.no]
-        XCTAssert(words.checkGuess(word: "lxlxx") == results)
+        results = [.no,.no,.yes,.no,.no]
+        XCTAssert(words.checkGuess(word: "lalbc") == results)
 
         //test guess contains two same letters, answer has only one in it, one in correct place. Correct last
         results = [.no,.yes,.no,.no,.no]
-        XCTAssert(words.checkGuess(word: "eexxx") == results)
+        XCTAssert(words.checkGuess(word: "eeabc") == results)
 
         //test guess contains two same letters, answer has only one in it, one in correct place. Correct first
         results = [.no,.yes,.no,.no,.no]
-        XCTAssert(words.checkGuess(word: "xexxe") == results)
+        XCTAssert(words.checkGuess(word: "aebce") == results)
 
+        //test guess contains two same letters, answer has only one in it, one not in correct place. Correct first
+        words.todaysWord = "covet"
+        results = [.no,.no,.included,.included,.no]
+        XCTAssert(words.checkGuess(word: "photo") == results)
         
+        words.todaysWord = "morly"
+        results = [.no,.no,.no,.yes,.yes]
+        XCTAssert(words.checkGuess(word: "telly") == results)
+
+
     }
     
     func testPerformanceExample() throws {

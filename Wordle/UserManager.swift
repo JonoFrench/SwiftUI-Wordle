@@ -137,15 +137,15 @@ class UserManager: ObservableObject {
             print("chars \(wordsArray[currentLine][index].key) Element \(element)")
             DispatchQueue.main.asyncAfter(deadline: .now() + 2) { [self] in
                 if let index = line1.firstIndex(where: { $0.key == letters[index].key }) {
-                    if line1[index].result != .yes {
+                    if line1[index].result != .yes && line1[index].result != .included {
                         line1[index].result = element
                     }
                 } else if let index = line2.firstIndex(where: { $0.key == letters[index].key }) {
-                    if line2[index].result != .yes {
+                    if line2[index].result != .yes && line2[index].result != .included {
                         line2[index].result = element
                     }
                 } else if let index = line3.firstIndex(where: { $0.key == letters[index].key }) {
-                    if line3[index].result != .yes {
+                    if line3[index].result != .yes && line2[index].result != .included {
                         line3[index].result = element
                     }
                 }

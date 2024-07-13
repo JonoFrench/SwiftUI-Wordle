@@ -40,20 +40,22 @@ struct GameWords {
         var todaysChars: [Character] = []
         var guessChars: [Character] = []
         var usedChars: [Character] = []
-        for (index, char) in word.enumerated() {
-            print("index = \(index), character = \(char)")
+        for (_, char) in word.enumerated() {
+//            print("index = \(index), character = \(char)")
             guessChars.append(char)
         }
  
-        for (index, char) in todaysWord.enumerated() {
-            print("index = \(index), character = \(char)")
+        for (_, char) in todaysWord.enumerated() {
+//            print("index = \(index), character = \(char)")
             todaysChars.append(char)
         }
         print("todays chars \(todaysChars)")
         print("guess chars \(guessChars)")
 
         for i in 0...4 {
-            if guessChars[i] == todaysChars[i] {
+            print("guess letter \(guessChars[i])")
+            print("today letter \(todaysChars[i])")
+           if guessChars[i] == todaysChars[i] {
                 results.append(.yes)
                 usedChars.append(guessChars[i])
             } else if todaysChars.filter({$0 == guessChars[i]}).count > 1 && !usedChars.contains(guessChars[i]){
@@ -66,8 +68,8 @@ struct GameWords {
             } else if todaysChars.filter({$0 == guessChars[i]}).count > 1 && usedChars.contains(guessChars[i]){
                 results.append(.no)
             } else if guessChars.filter({$0 == guessChars[i]}).count > 1 && !usedChars.contains(guessChars[i]){
-                results.append(.no)
-               // usedChars.append(guessChars[i])
+                results.append(.included) //.no
+                usedChars.append(guessChars[i])
             }
             
             else if todaysChars.contains(guessChars[i]) && !usedChars.contains(guessChars[i]){
@@ -75,6 +77,34 @@ struct GameWords {
                 usedChars.append(guessChars[i])
             } else {
                 results.append(.no)
+            }
+        }
+        
+        // duplicate handling
+        // if we have duplicate letters in the guess and the answer has only one and say the first is included and the second is correct
+        // then we want to set the first included to no.
+        let duplicateArray = usedChars.filter({ c in
+           return usedChars.filter({ $0 == c }).count > 1
+        })
+        let duplicates = Array(Set(duplicateArray))
+        var someCorrect = false
+        
+        for dupe in duplicates  {
+            for i in 0...4 {
+                if guessChars[i] == dupe && results[i] == .yes {
+                    someCorrect = true
+                }
+            }
+                    
+            print("duplicate chars \(duplicates)")
+            if someCorrect {
+                for i in 0...4 {
+                    if guessChars[i] == dupe && results[i] == .yes {
+                        break
+                    } else if guessChars[i] == dupe && results[i] == .included {
+                        results[i] = .no
+                    }
+                }
             }
         }
         print("used chars \(usedChars)")
