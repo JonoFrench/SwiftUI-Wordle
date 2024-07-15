@@ -67,7 +67,7 @@ struct GameWords {
                 usedChars.append(guessChars[i])
             } else if todaysChars.filter({$0 == guessChars[i]}).count > 1 && usedChars.contains(guessChars[i]){
                 results.append(.no)
-            } else if guessChars.filter({$0 == guessChars[i]}).count > 1 && !usedChars.contains(guessChars[i]){
+            } else if todaysChars.filter({$0 == guessChars[i]}).count > 1 && !usedChars.contains(guessChars[i]) && usedChars.count > 0 {
                 results.append(.included) //.no
                 usedChars.append(guessChars[i])
             }
